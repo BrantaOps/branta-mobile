@@ -25,6 +25,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { RNCamera } from 'react-native-camera';
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
