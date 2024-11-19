@@ -1,62 +1,57 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
-  ImageBackground
+  ImageBackground,
+  TouchableOpacity
 } from 'react-native';
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { RNCamera } from 'react-native-camera';
+import { request, PERMISSIONS } from 'react-native-permissions';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import Icon from 'react-native-vector-icons/Ionicons'; // For icons
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import QRScanner from './QRScanner'; // Import QR Scanner screen
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
+
+const Stack = createStackNavigator();
+
+const HomeScreen = ({ navigation }: { navigation: any }) => {
+  const requestCameraPermission = async () => {
+    const result = await request(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CAMERA
+        : PERMISSIONS.ANDROID.CAMERA
+    );
+    console.log('Camera Permission: ', result);
+  };
+  requestCameraPermission()
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <ImageBackground
+      source={require('./assets/logo-black-2048.png')}
+      style={styles.backgroundImage}
+      resizeMode="contain"
+    >
+      <TouchableOpacity
+        style={styles.iconContainer}
+        onPress={() => navigation.navigate('QRScanner')} // Navigate to QR Scanner
+      >
+        <Icon name="qr-code" size={30} color="black" />
+      </TouchableOpacity>
+    </ImageBackground>
   );
-}
+};
+
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -66,12 +61,20 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <ImageBackground
-      source={require('./assets/logo-black-2048.png')}
-      style={styles.backgroundImage}
-      resizeMode="contain"
-    >
-    </ImageBackground>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }} // Hides the header
+        />
+        <Stack.Screen
+          name="QRScanner"
+          component={QRScanner}
+          options={{ title: 'Scan QR Code' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -90,6 +93,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 50, // Adjust based on the safe area
+    left: 20,
+    zIndex: 10, // Ensures the icon is on top of the background
   },
 });
 
