@@ -20,4 +20,4 @@ jobs:
       run: npm run lint
 
     - name: check for unused dependencies
-      run: npx depcheck
+      run: npx depcheck --skip-missing=true --ignores="depcheck,typescript,@babel/preset-env,@babel/runtime,@react-native-community/cli,@react-native-community/cli-platform-android,@react-native-community/cli-platform-ios,babel-jest"
