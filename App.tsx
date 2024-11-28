@@ -8,16 +8,33 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import QRScanner from './QRScanner';
 const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="QRScanner"
+          component={QRScanner}
+          options={{
+            title: '',
+            headerStyle: {
+              backgroundColor: '#000',
+            },
+            headerTintColor: '#fff',
+            cardStyle: {
+              backgroundColor: 'rgba(0,0,0,1)',
+            },
+            headerLeft: () => null,
+            headerRight: () => null,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
