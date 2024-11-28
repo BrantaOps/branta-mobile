@@ -1,0 +1,23 @@
+name: "Continuous Integration"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install modules
+      run: npm i
+
+    - name: audit
+      run: npm audit --audit-level=critical
+
+    - name: lint
+      run: npm run lint
+
+    - name: check for unused dependencies
+      run: npx depcheck --skip-missing=true --ignores="depcheck,typescript,@babel/preset-env,@babel/runtime,@react-native-community/cli,@react-native-community/cli-platform-android,@react-native-community/cli-platform-ios,babel-jest"
